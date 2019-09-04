@@ -1,13 +1,5 @@
 {
-  "name": "dosanddonts",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "ionic1",
-  "watchPatterns": [
-    "scss/**/*",
-    "www/**/*",
-    "!www/lib/**/*",
-    "!www/**/*.map"
-  ]
+  "name": "frontend",
+  "integrations": {},
+  "type": "angular"
 }
