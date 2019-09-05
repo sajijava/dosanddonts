@@ -3,7 +3,7 @@
 const dbpool  = require('../models/db')
 
 exports.allEntities = function(req, res) {
-  dbpool.query('select * from entity',(error,result) => {
+  dbpool.query('select * from entity limit 10',(error,result) => {
     if(error) throw error;
 
     res.json(result);
