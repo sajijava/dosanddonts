@@ -5,10 +5,13 @@
 </ion-header>
 
 <ion-content>
+  {{location}}
   <ion-list>
     <ion-item *ngFor="let item of results">
       <ion-label class="ion-text-wrap">
-        <h3>{{ item.companyName }}</h3>
+        <h1>{{ item.companyName }}</h1>
+        <h5>{{ item.street }}, {{ item.city }}, {{ item.state }} {{ item.zip }}</h5>
+        <h5>{{ item.phone }}</h5>
       </ion-label>
     </ion-item>
   </ion-list>
