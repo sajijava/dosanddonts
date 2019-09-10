@@ -8,6 +8,8 @@ module.exports = (app,db) => {
 
   app.route('/api/entity/:id').get(entityController.getEntity);
 
-  app.route('/api/entity/:lat/:long/:distance').get(entityController.getEntityGeoRadius);
+  app.route('/api/aroundme/:lat/:long/:distance').get(entityController.getEntityGeoRadius);
+
+  app.route('/api/dailynotifications').get(entityController.dailyNotifications);
 
 };

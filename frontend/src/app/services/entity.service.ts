@@ -28,6 +28,20 @@ export class Entity {
    }
 }
 
+export class Notification{
+  type:string;
+  title:string;
+  text:string;
+  icon:string;
+  color:string;
+  constructor(values){
+    this.type = values.type
+    this.text = values.text
+  }
+
+}
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +76,13 @@ export class EntityService {
     this.logger.debug("calling /api/aroundme/"+latitude+"/"+longitude+"/"+radius);
 
     return this.getObservableData(this.http.get("/api/aroundme/"+latitude+"/"+longitude+"/"+radius))
+
+  }
+
+  getNotifications():Observable<any>{
+    this.logger.debug("calling /api/dailyNotifications");
+
+    return this.http.get("/api/dailyNotifications");
 
   }
 }

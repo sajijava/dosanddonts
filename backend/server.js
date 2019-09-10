@@ -2,6 +2,7 @@
 var Entity = require('./api/models/entityModel') //created model loading here
 var bodyParser = require('body-parser')
 var router = require('./api/routes/entityRouter')
+var notifications = require('./features/notifications')
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 3000;
@@ -31,6 +32,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 router(app)
+
+
+setInterval(notifications.generateNewNotifications,1 * 10 * 60 * 1000)
 
 app.listen(port);
 
