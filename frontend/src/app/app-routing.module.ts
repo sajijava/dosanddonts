@@ -1,17 +1,13 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guard/auth.guard'
 
 const routes: Routes = [
-   //{ path: '', redirectTo: 'tabs', pathMatch: 'full' },
-  // { path: 'home', loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)},
-  // { path: 'entities', loadChildren: './pages/entities/entities.module#EntitiesPageModule' },
-  // { path: 'entity-details/:id', loadChildren: './pages/entity-details/entity-details.module#EntityDetailsPageModule' },
-  //{ path: 'tabs', loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)},
-  { path: '', loadChildren: './tabs/tabs.module#TabsPageModule' },
-  { path: 'tabs-settings', loadChildren: './tabs-settings/tabs-settings.module#TabsSettingsPageModule' },
-  // { path: 'tabs-home', loadChildren: './tabs-home/tabs-home.module#TabsHomePageModule' },
-  // { path: 'tabs-search', loadChildren: './tabs-search/tabs-search.module#TabsSearchPageModule' },
-  // { path: 'tabs-update', loadChildren: './tabs-update/tabs-update.module#TabsUpdatePageModule' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
+  { path: 'register', loadChildren: './register/register.module#RegisterPageModule' },
+  { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule', canActivate:[AuthGuard] },
+  
 ];
 
 @NgModule({
