@@ -39,14 +39,15 @@ export class AuthService {
     this.token = token;
     this.isLoggedIn = true;
   }
+
   login(email:string, password:string){
     return this.http.post(this.env.API_URL + 'auth/login',
             {email:email, password:password})
             .pipe(
               tap(
-                token => {
-                  this.setToken(token)
-                  return token;
+                response => {
+                  this.setToken(response['token'])
+                  return response;
                 }
               )
             );
@@ -55,7 +56,7 @@ export class AuthService {
     // send user detail for registering
     register(fName:string, lName:string, email:string, password:string){
       return this.http.post(this.env.API_URL + 'auth/register',
-              {fName:fName, lName:lName, email:email, password:password})
+              {firstName:fName, lastName:lName, email:email, password:password})
               .pipe(
                 tap(
                   response => {
@@ -67,12 +68,9 @@ export class AuthService {
     }
 
     //
-    logout(){
-      const headers = new HttpHeaders(
-        {'Authorization' : this.token[this.TOKEN_TYPE]+" "+this.token[this.ACCESS_TYPE]});
-
-        return this.http.get(this.env.API_URL + 'auth/logout',
-              {headers:headers})
+    logout(email:string){
+        return this.http.post(this.env.API_URL + 'auth/logout',
+              {email:email})
               .pipe(
                 tap( data => {
                   this.storage.remove(this.TOKEN_KEY);
@@ -82,7 +80,8 @@ export class AuthService {
                 })
               );
     }
-    user(){
+
+    userById(){
       const headers = new HttpHeaders({
         'Authorization' : this.token[this.TOKEN_TYPE]+" "+this.token[this.ACCESS_TYPE]
       })
@@ -95,10 +94,11 @@ export class AuthService {
             )
     }
 
-    getToken(){
+  getToken(){
       return this.storage.getItem(this.TOKEN_KEY)
             .then(
               data => {
+                console.log(data)
                 this.token = data;
 
                 if(this.token != null){
@@ -114,4 +114,7 @@ export class AuthService {
             );
     }
 
+    authHeader(){
+      return new HttpHeaders({ 'Authorization' : this.token[this.TOKEN_TYPE]+" "+this.token[this.ACCESS_TYPE]})
+    }
 }

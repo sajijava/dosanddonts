@@ -36,11 +36,11 @@ export class AppComponent {
   }
 
   logout(){
-    this.authService.logout()
-        .subscribe(
-          data => { this.alertService.presentToast(data['message'])},
-          error => { console.log( error)},
-          () => { this.navController.navigateRoot('/tabs')}
-        )
+    // this.authService.logout()
+    //     .subscribe(
+    //       data => { this.alertService.presentToast(data['message'])},
+    //       error => { console.log( error)},
+    //       () => { this.navController.navigateRoot('/tabs')}
+    //     )
   }
 }

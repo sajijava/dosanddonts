@@ -28,13 +28,17 @@ export class LoginPage implements OnInit {
     this.authService.login(form.value.email, form.value.password)
     .subscribe(
       data =>{
-        this.alertService.presentToast("Logged In")
+        if(data['token']){
+          this.navController.navigateRoot('/tabs')
+        }
+
       },
       error => {
         console.log(error);
+        this.alertService.presentToast(error);
       },
       () => {
-        this.navController.navigateRoot('/tabs')
+        //this.navController.navigateRoot('/tabs')
       }
     )
   }

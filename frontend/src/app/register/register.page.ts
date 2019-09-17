@@ -31,7 +31,7 @@ export class RegisterPage implements OnInit {
     if(!form.value.email) this.message = "email is required"
     if(!form.value.password) this.message = "password is required"
 
-    return !(this.message == "")
+    return (this.message == "")
 
 
   }

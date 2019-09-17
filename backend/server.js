@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 router(app)
 
 
-setInterval(notifications.generateNewNotifications,1 * 10 * 60 * 1000)
+//setInterval(notifications.generateNewNotifications,1 * 10 * 60 * 1000)
 
 app.listen(port);
 

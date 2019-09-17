@@ -7,6 +7,7 @@ const jwt    = require('jsonwebtoken')
 const secret = "4c172f5d-67b6-439c-b717-2f100eab867a"
 
 exports.validateJwtToken = function(req,res,next){
+  //console.log(req)
   if(req.headers['authorization']){
     try{
       let authorization = req.headers['authorization'].split(' ');
@@ -117,9 +118,9 @@ exports.createUser = function(req, res, next){
 }
 
 exports.generateToken = function (req,res,next){
-  req.body.data.token = jwt.sign({id:req.body.data.email}, req.body.data.secret, {
+  req.body.data.token = {'token_type':'Bearer', 'access_type':jwt.sign({id:req.body.data.email}, req.body.data.secret, {
               expiresIn: 1440 // expires in 24 hours
-        });
+        })};
 
   next()
 }

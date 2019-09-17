@@ -74,6 +74,7 @@ What are the possible notifications types
 
 */
 exports.generateNewNotifications = function(){
+  console.log("Generating new notification")
     Promise.all([
       getDYKNotifications().catch( error => console.log(error)),
       getLRTNotifications().catch( error => console.log(error)),
