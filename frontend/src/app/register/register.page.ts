@@ -15,6 +15,7 @@ import { TabsPage } from '../tabs/tabs.page';
 })
 export class RegisterPage implements OnInit {
 
+  message : string;
   constructor(
     private authService : AuthService,
     private alertService : AlertService,
@@ -23,26 +24,39 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
+  validate(form:NgForm){
+    this.message = "";
+    if(!form.value.fName) this.message = "First Name is required"
+    if(!form.value.lName) this.message = "Last Name is required"
+    if(!form.value.email) this.message = "email is required"
+    if(!form.value.password) this.message = "password is required"
+
+    return !(this.message == "")
+
+
+  }
   register(form:NgForm){
 
-    this.authService.register(form.value.fName,
-                              form.value.lName,
-                              form.value.email,
-                              form.value.password)
-                    .subscribe(
-                        data => {
-                                  console.log(data)
-                                  if(data['token']){
-                                    this.alertService.presentToast("User Registered")
-                                    this.navController.navigateRoot('/tabs')
-                                    //this.navController.setRoot('/tabs')
-                                  }
-                                },
-                                error => {
-                                  console.log(error)
-                                },
-                                () => {}
-                              );
+    if(this.validate(form)){
+      this.authService.register(form.value.fName,
+                                form.value.lName,
+                                form.value.email,
+                                form.value.password)
+                      .subscribe(
+                          data => {
+                                    console.log(data)
+                                    if(data['token']){
+                                      this.alertService.presentToast("User Registered")
+                                      this.navController.navigateRoot('/tabs')
+                                      //this.navController.setRoot('/tabs')
+                                    }
+                                  },
+                                  error => {
+                                    console.log(error)
+                                  },
+                                  () => {}
+                                );
 
+    }
   }
 }
