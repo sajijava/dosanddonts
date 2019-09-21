@@ -17,6 +17,7 @@ export class TabsSearchPage implements OnInit {
     latitude: number,
     longitude: number
   };
+  searchTerm: string
   constructor(private entityService: EntityService,
     private logger: NGXLogger//,
   //  private geolocation: Geolocation,
@@ -39,6 +40,9 @@ export class TabsSearchPage implements OnInit {
       this.getEntitiesForCurrentLocation(40.570545, -74.277186)
       //this.mapsProvider.init(this.location, this.mapElement);
 
+
+  }
+  searchChanged(term){
 
   }
 
@@ -81,5 +85,7 @@ export class TabsSearchPage implements OnInit {
       );
 
   }
+
+
 
 }

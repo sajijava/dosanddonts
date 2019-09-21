@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'app-tabs-settings',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TabsSettingsPage implements OnInit {
 
-  constructor() { }
+  user:{}
+  constructor(private authService:AuthService) { }
 
   ngOnInit() {
+    this.user = this.authService.userByEmail();
   }
 
 }

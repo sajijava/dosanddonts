@@ -15,6 +15,7 @@ import {User} from '../models/User'
 export class AuthService {
   isLoggedIn = false;
   token: any;
+  USER_KEY = "currentUser";
   TOKEN_KEY = "token";
   TOKEN_TYPE = "token_type";
   ACCESS_TYPE = "access_type";
@@ -29,6 +30,15 @@ export class AuthService {
     calling the api to get user token. and store it locally.
   */
 
+  setUser(user){
+    this.storage.setItem(this.USER_KEY,user)
+    if(user['token']){
+      this.token = user['token'];
+      this.isLoggedIn = true;
+    }else{
+      this.isLoggedIn = false;
+    }
+  }
   setToken(token){
     this.storage.setItem(this.TOKEN_KEY, token)
     .then(() => {
@@ -46,7 +56,7 @@ export class AuthService {
             .pipe(
               tap(
                 response => {
-                  this.setToken(response['token'])
+                  this.setUser(response)
                   return response;
                 }
               )
@@ -60,7 +70,7 @@ export class AuthService {
               .pipe(
                 tap(
                   response => {
-                    this.setToken(response['token'])
+                    this.setUser(response)
                     return response;
                   }
                 )
@@ -73,7 +83,7 @@ export class AuthService {
               {email:email})
               .pipe(
                 tap( data => {
-                  this.storage.remove(this.TOKEN_KEY);
+                  this.storage.remove(this.USER_KEY);
                   this.isLoggedIn = false;
                   delete this.token;
                   return data;
@@ -81,12 +91,9 @@ export class AuthService {
               );
     }
 
-    userById(){
-      const headers = new HttpHeaders({
-        'Authorization' : this.token[this.TOKEN_TYPE]+" "+this.token[this.ACCESS_TYPE]
-      })
-
-      return this.http.get<User>(this.env.API_URL + 'auth/user',{headers:headers})
+    userByEmail(){
+      let response = this.storage.getItem(this.USER_KEY);
+      return this.http.get<User>(this.env.API_URL + 'auth/user/'+response['email'],{headers:this.authHeader()})
             .pipe(
               tap(user => {
                 return user;
@@ -95,17 +102,22 @@ export class AuthService {
     }
 
   getToken(){
-      return this.storage.getItem(this.TOKEN_KEY)
+      return this.storage.getItem(this.USER_KEY)
             .then(
               data => {
                 console.log(data)
-                this.token = data;
+                if(data['token']){
+                  this.token = data['token'];
 
-                if(this.token != null){
-                  this.isLoggedIn = true;
+                  if(this.token != null){
+                    this.isLoggedIn = true;
+                  }else{
+                    this.isLoggedIn = false;
+                  }
                 }else{
                   this.isLoggedIn = false;
                 }
+
               },
               error => {
                 this.token = null;
