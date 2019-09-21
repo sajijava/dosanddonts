@@ -1,9 +1,42 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>tabs-settings</ion-title>
+    <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+  <ion-card >
+    <ion-card-header>
+      <ion-card-title>Account</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-input readonly type="text" value="{{user.firstName}} {{user.lastName}}"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input readonly type="text" value="{{user.email}}"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Password</ion-label>
+        <ion-input readonly type="text" value="{{user.password}}"></ion-input>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Home Location</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Woodbridge</ion-label>
+        <ion-label position="stacked">NJ 07095</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
