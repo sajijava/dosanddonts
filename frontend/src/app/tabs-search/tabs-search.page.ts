@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { EntityService, Entity} from '../services/entity.service';
 import { Observable } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-//import { Geolocation } from '@ionic-native/geolocation/ngx';
-//import { NativeGeocoder,NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder,NativeGeocoderOptions,NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
 
 
 @Component({
@@ -17,11 +17,12 @@ export class TabsSearchPage implements OnInit {
     latitude: number,
     longitude: number
   };
+  geoAddress: string;
   searchTerm: string
   constructor(private entityService: EntityService,
-    private logger: NGXLogger//,
-  //  private geolocation: Geolocation,
-  //  private nativeGeocoder: NativeGeocoder
+    private logger: NGXLogger,
+    private geolocation: Geolocation,
+    private nativeGeocoder: NativeGeocoder
     )
     { }
 
@@ -31,28 +32,30 @@ export class TabsSearchPage implements OnInit {
       timeout: 25000
     };
 
-    // this.geolocation.getCurrentPosition(options).then((position) => {
-    //
-    //   this.location = {
-    //     latitude: position.coords.latitude,
-    //     longitude: position.coords.longitude
-    //   };
-      this.getEntitiesForCurrentLocation(40.570545, -74.277186)
-      //this.mapsProvider.init(this.location, this.mapElement);
+   this.geolocation.getCurrentPosition(options)
+      .then((position) => {
+
+          this.location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+          console.log(this.location)
+          //this.getEntitiesForCurrentLocation(40.570545, -74.277186)
+          this.getEntitiesForCurrentLocation()
+          this.getGeoencoder()
+          //this.mapsProvider.init(this.location, this.mapElement);
+      })
+
+    }
 
 
+  getCurrentLocation(){
+    return this.geolocation.getCurrentPosition();
+    //return new Promise(function(resolve, reject){resolve(JSON({'coords':{'latitude':40.570561,'longitude':-74.277197}})})
   }
-  searchChanged(term){
+   getEntitiesForCurrentLocation(){
 
-  }
-
-  // getCurrentLocation(){
-  //   //return this.geolocation.getCurrentPosition();
-  //   return new Promise(function(resolve, reject){resolve(JSON({'coords':{'latitude':40.570561,'longitude':-74.277197}})})
-  // }
-   getEntitiesForCurrentLocation(latitude, longitude){
-
-           this.entityService.getEntitiesByCurrentLocation(latitude, longitude,1)
+           this.entityService.getEntitiesByCurrentLocation(this.location.latitude, this.location.longitude,1)
            .subscribe(
                (entities : Entity[]) => {
                this.logger.debug(entities);
@@ -61,16 +64,38 @@ export class TabsSearchPage implements OnInit {
            );
    }
 
+searchChanged(event){}
 
-  // getGeoencoder(latitude,longitude){
-  //     this.nativeGeocoder.reverseGeocode(latitude, longitude, this.geoencoderOptions)
-  //     .then((result: NativeGeocoderReverseResult[]) => {
-  //       this.geoAddress = this.generateAddress(result[0]);
-  //     })
-  //     .catch((error: any) => {
-  //       alert('Error getting location'+ JSON.stringify(error));
-  //     });
-  //   }
+   //Return Comma saperated address
+       generateAddress(addressObj){
+           let obj = [];
+           let address = "";
+           for (let key in addressObj) {
+             obj.push(addressObj[key]);
+           }
+           obj.reverse();
+           for (let val in obj) {
+             if(obj[val].length)
+             address += obj[val]+', ';
+           }
+         return address.slice(0, -2);
+       }
+
+  getGeoencoder(){
+        let geoencoderOptions: NativeGeocoderOptions = {
+        useLocale: true,
+        maxResults: 5
+      };
+      this.nativeGeocoder.reverseGeocode(this.location.latitude, this.location.longitude, geoencoderOptions)
+      .then((result: NativeGeocoderResult[]) => {
+        console.log(result)
+        this.geoAddress = this.generateAddress(result[0]);
+        console.log(this.geoAddress)
+      })
+      .catch((error: any) => {
+        alert('Error getting location'+ JSON.stringify(error));
+      });
+    }
 
 
   getAllEntities(){
