@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class EnvService {
-  API_URL = '/api/';
+  API_URL = 'https://kytbackend-8050.nodechef.com/api/';
 
   constructor() { }
 }

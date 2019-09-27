@@ -35,7 +35,7 @@ export class LoginPage implements OnInit {
       },
       error => {
         console.log(error);
-        this.alertService.presentToast(error);
+        this.alertService.presentToast(JSON.stringify(error) );
       },
       () => {
         //this.navController.navigateRoot('/tabs')

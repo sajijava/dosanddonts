@@ -8,11 +8,11 @@ import { AuthService } from '../services/auth.service'
 })
 export class TabsSettingsPage implements OnInit {
 
-  user:{}
+  user = {firstName:'',lastName:'',email:'',password:''}
   constructor(private authService:AuthService) { }
 
   ngOnInit() {
-    this.user = this.authService.userByEmail();
+    //this.user = this.authService.userByEmail();
   }
 
 }

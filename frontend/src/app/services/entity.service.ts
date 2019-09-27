@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders,HttpErrorResponse } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable,of } from 'rxjs';
-import { AuthService } from './auth.service'
 import { map, catchError } from 'rxjs/operators';
+
+import { AuthService } from './auth.service'
+import { EnvService } from './env.service'
+
 
 
 
@@ -49,7 +52,11 @@ export class Notification{
 })
 export class EntityService {
   url = '/api/entities'
-  constructor(private http: HttpClient, private logger: NGXLogger, private authService : AuthService ) { }
+  constructor(private http: HttpClient,
+    private logger: NGXLogger,
+    private authService : AuthService,
+    private env : EnvService
+  ) { }
 
   getEntity() : Observable<Entity[]>{
     this.logger.debug("calling api/entities ")
@@ -74,16 +81,18 @@ export class EntityService {
     );
   }
   getEntitiesByCurrentLocation(latitude,longitude,radius):Observable<Entity[]>{
-    this.logger.debug("calling /api/aroundme/"+latitude+"/"+longitude+"/"+radius);
+    let url = this.env.API_URL+"aroundme/"+latitude+"/"+longitude+"/"+radius;
+    this.logger.debug("calling "+url);
 
-    return this.getObservableData(this.http.get("/api/aroundme/"+latitude+"/"+longitude+"/"+radius,{headers : this.authService.authHeader()}))
+    return this.getObservableData(this.http.get(url,{headers : this.authService.authHeader()}));
 
   }
 
   getNotifications():Observable<any>{
-    this.logger.debug("calling /api/dailyNotifications");
+    let url = this.env.API_URL+"dailyNotifications";
+    this.logger.debug("calling "+url);
 
-    return this.http.get("/api/dailyNotifications",{headers : this.authService.authHeader()});
+    return this.http.get(url,{headers : this.authService.authHeader()});
 
   }
 }
