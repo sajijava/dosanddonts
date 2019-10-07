@@ -22,6 +22,7 @@
     "@angular/router": "~8.1.2",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/geolocation": "^5.13.0",
+    "@ionic-native/launch-navigator": "^5.14.0",
     "@ionic-native/native-geocoder": "^5.13.0",
     "@ionic-native/native-storage": "^5.13.0",
     "@ionic-native/splash-screen": "^5.0.0",
@@ -31,7 +32,9 @@
     "cordova-android": "^8.1.0",
     "cordova-browser": "^6.0.0",
     "cordova-ios": "5.0.1",
+    "cordova-plugin-actionsheet": "^2.3.3",
     "cordova-plugin-add-swift-support": "^2.0.2",
+    "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-geolocation": "^4.0.2",
     "cordova-plugin-nativegeocoder": "^3.2.2",
     "cordova-plugin-nativestorage": "^2.3.2",
@@ -40,6 +43,7 @@
     "ngx-logger": "^4.0.4",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": "^5.0.4",
     "uuid": "^3.3.3",
     "zone.js": "~0.9.1"
   },
@@ -88,7 +92,10 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-nativestorage": {}
+      "cordova-plugin-nativestorage": {},
+      "uk.co.workingedge.phonegap.plugin.launchnavigator": {
+        "GOOGLE_API_KEY_FOR_ANDROID": "AIzaSyD6yPLA6S780wcwvATusrf1_dB7y9zM-8c"
+      }
     },
     "platforms": [
       "ios",

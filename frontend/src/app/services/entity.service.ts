@@ -95,4 +95,25 @@ export class EntityService {
     return this.http.get(url,{headers : this.authService.authHeader()});
 
   }
+  getOperatingTimes(locationId:String):Observable<any>{
+    let url = this.env.API_URL+"operatingtime/"+locationId;
+    this.logger.debug("calling "+url);
+
+    return this.http.get(url,{headers : this.authService.authHeader()});
+
+  }
+getCategories(entityId:String):Observable<any>{
+    let url = this.env.API_URL+"categories/"+entityId;
+    this.logger.debug("calling "+url);
+
+    return this.http.get(url,{headers : this.authService.authHeader()});
+
+  }
+  getDetails(entityId:String):Observable<any>{
+    let url = this.env.API_URL+"details/"+entityId;
+    this.logger.debug("calling "+url);
+
+    return this.http.get(url,{headers : this.authService.authHeader()});
+
+  }
 }

@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>What is around me...</ion-title>
-
+    <ion-title>Around me...</ion-title>
+    <ion-icon name="locate" slot="end" (click)="refreshLocation()"></ion-icon>
+    <p class="subtitle">{{currentAddress}}</p>
   </ion-toolbar>
   <!-- <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)"></ion-searchbar> -->
   <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)"></ion-searchbar>
@@ -9,13 +10,19 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let item of results">
-      <ion-label class="ion-text-wrap">
+  <ion-list *ngFor="let item of results;let i = index" >
+    <ion-item tappable (click)="showDetails(i)">
+      <ion-label class="ion-text-wrap" >
         <h1>{{ item.companyName }}</h1>
-        <h5>{{ item.street }}, {{ item.city }}, {{ item.state }} {{ item.zip }}</h5>
-        <h5>{{ item.phone }}</h5>
+        <h5>{{ item.street }}, {{ item.city }}, {{ item.state }} {{ item.zip }} <p>Get Direction</p></h5>
+        <h5><a href="tel:{{ item.phone }}">{{ item.phone }} {{item.expand}}</a></h5>
       </ion-label>
     </ion-item>
+    <div *ngIf="item.expand">
+      <div id="expandwrapper" class="expand-wrapper" [class.collapsed]="!item.expand">
+        <p>Categories: {{categories}} </p>
+        <p *ngFor="let det of entityDetails"> {{det.key}} : {{det.value}} </p>
+      </div>
+    </div>
   </ion-list>
 </ion-content>

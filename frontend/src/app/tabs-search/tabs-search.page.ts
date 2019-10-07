@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EntityService, Entity} from '../services/entity.service';
+import { GeolocationService} from '../services/geolocation.service';
 import { Observable } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { NativeGeocoder,NativeGeocoderOptions,NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
 
 
 @Component({
@@ -12,90 +11,53 @@ import { NativeGeocoder,NativeGeocoderOptions,NativeGeocoderResult } from '@ioni
   styleUrls: ['./tabs-search.page.scss'],
 })
 export class TabsSearchPage implements OnInit {
-  results : Entity[]
+  results : any = []
   location: {
     latitude: number,
     longitude: number
   };
-  geoAddress: string;
-  searchTerm: string
+  currentAddress: string;
+  searchTerm: string;
+  categories: string;
+  entityDetails:any = [];
+  operatingTime:[];
+
   constructor(private entityService: EntityService,
     private logger: NGXLogger,
-    private geolocation: Geolocation,
-    private nativeGeocoder: NativeGeocoder
+    private geoLocation: GeolocationService
     )
     { }
 
   ngOnInit() {
-    let options = {
-      enableHighAccuracy: true,
-      timeout: 25000
-    };
-
-   this.geolocation.getCurrentPosition(options)
-      .then((position) => {
-
-          this.location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-          console.log(this.location)
-          //this.getEntitiesForCurrentLocation(40.570545, -74.277186)
-          this.getEntitiesForCurrentLocation()
-          this.getGeoencoder()
-          //this.mapsProvider.init(this.location, this.mapElement);
-      })
-
-    }
-
+    this.getCurrentLocation()
+  }
 
   getCurrentLocation(){
-    return this.geolocation.getCurrentPosition();
-    //return new Promise(function(resolve, reject){resolve(JSON({'coords':{'latitude':40.570561,'longitude':-74.277197}})})
+    // this.geoLocation.getCurrentLocation()
+    // .then( loc => {console.log(loc)
+    //     this.currentAddress = loc["locationAddress"];
+    //     this.getEntitiesForCurrentLocation(loc["latitude"],loc["longitude"])
+    //
+    // })
+
+    this.getEntitiesForCurrentLocation(40.5702819, -74.277234)
   }
-   getEntitiesForCurrentLocation(){
+  refreshLocation(){
+    this.getCurrentLocation();
+  }
 
-           this.entityService.getEntitiesByCurrentLocation(this.location.latitude, this.location.longitude,1)
-           .subscribe(
-               (entities : Entity[]) => {
-               this.logger.debug(entities);
-                 this.results = entities;
-               }
-           );
-   }
+  getEntitiesForCurrentLocation(latitude, longitude){
+    console.log("getting entities")
 
-searchChanged(event){}
-
-   //Return Comma saperated address
-       generateAddress(addressObj){
-           let obj = [];
-           let address = "";
-           for (let key in addressObj) {
-             obj.push(addressObj[key]);
-           }
-           obj.reverse();
-           for (let val in obj) {
-             if(obj[val].length)
-             address += obj[val]+', ';
-           }
-         return address.slice(0, -2);
-       }
-
-  getGeoencoder(){
-        let geoencoderOptions: NativeGeocoderOptions = {
-        useLocale: true,
-        maxResults: 5
-      };
-      this.nativeGeocoder.reverseGeocode(this.location.latitude, this.location.longitude, geoencoderOptions)
-      .then((result: NativeGeocoderResult[]) => {
-        console.log(result)
-        this.geoAddress = this.generateAddress(result[0]);
-        console.log(this.geoAddress)
-      })
-      .catch((error: any) => {
-        alert('Error getting location'+ JSON.stringify(error));
-      });
-    }
+    console.log(location)
+    this.entityService.getEntitiesByCurrentLocation(latitude, longitude,1)
+    .subscribe(
+        (entities : Entity[]) => {
+        this.logger.debug(entities);
+          this.results = entities;
+        }
+    );
+  }
 
 
   getAllEntities(){
@@ -109,6 +71,43 @@ searchChanged(event){}
         }
       );
 
+  }
+  searchChanged(event){}
+
+  showDetails(idx){
+
+    this.categories = ""
+    this.entityDetails = []
+
+    let eid  = this.results[idx].id
+    this.results[idx].expand = !this.results[idx].expand;
+
+    if(this.results[idx].expand){
+      this.results
+        .filter((item, itemIndex) => itemIndex != idx)
+        .map( (item) => item.expand = false)
+    }
+
+
+    this.entityService.getCategories(eid)
+    .subscribe(
+      (categories) => {
+        let catg = []
+        for(let idx in categories){ // catg are index
+          catg.push(categories[idx]["category"])
+        }
+        this.categories = catg.join(", ")
+      }
+    )
+    this.entityService.getDetails(eid)
+    .subscribe(
+
+      (details) => {
+        for(let idx in details){
+          this.entityDetails.push({ "key":details[idx].key, "value":details[idx].value})
+        }
+      }
+    )
   }
 
 
